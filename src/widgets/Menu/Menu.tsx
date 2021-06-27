@@ -199,7 +199,7 @@ const Menu: React.FC<NavProps> = ({
         </StyledNavLeft>
         <StyledNavRight>
           <Flex>
-            <UserBlock account={account} login={login} logout={logout} buy={buy}/>
+            <UserBlock account={account} login={login} logout={logout} toggleTheme={toggleTheme} buy={buy}/>
             {profile && <Avatar profile={profile} />}
           </Flex>
         </StyledNavRight>
