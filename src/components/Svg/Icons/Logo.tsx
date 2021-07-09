@@ -2,10 +2,14 @@ import React from "react";
 import Svg from "../Svg";
 import { SvgProps } from "../types";
 
-const Icon: React.FC<SvgProps> = (props) => {
+interface MobileLogoProps extends SvgProps {
+  isDark: boolean;
+}
+
+const Icon: React.FC<MobileLogoProps> = ({ isDark, ...props }) => {
   return (
-    <Svg viewBox="0 0 32 32" {...props}>
-      <image width="32" height="32" href="/images/egg/logo.png"/>
+    <Svg viewBox="0 0 150 40" {...props}>
+      <image width="150" height="40" href={isDark ? '/images/egg/LogoTextNewDark.png' : '/images/egg/LogoTextNewWhite.png'}/>
     </Svg>
   );
 };

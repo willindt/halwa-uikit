@@ -64,7 +64,8 @@ const StyledButton = styled.button<ButtonProps>`
   letter-spacing: 0.03em;
   justify-content: center;
   outline: 0;
-  padding: ${({ size }) => (size === "sm" ? "0 16px" : "0 24px")};
+  padding: ${({ size }) => (size === "sm" ? "0 14px" : "0 24px")};
+  margin: ${({ size }) => (size === "sm" ? "0 5px" : "0")};
   transition: background-color 0.2s;
   opacity: ${({ isLoading }) => (isLoading ? 0.5 : 1)};
 

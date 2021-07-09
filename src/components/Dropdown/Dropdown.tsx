@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { DropdownProps, PositionProps, Position } from "./types";
+import { useMatchBreakpoints } from "../../hooks";
 
 const getLeft = ({ position }: PositionProps) => {
   if (position === "top-right") {
@@ -29,6 +30,7 @@ const DropdownContent = styled.div<{ position: Position }>`
   padding: 16px;
   max-height: 500px;
   overflow-y: auto;
+  overflow-x: hidden;
   z-index: ${({ theme }) => theme.zIndices.dropdown};
   border-radius: ${({ theme }) => theme.radii.small};
 `;
@@ -41,10 +43,13 @@ const Container = styled.div`
 `;
 
 const Dropdown: React.FC<DropdownProps> = ({ target, position = "bottom", children }) => {
+  const { isXl } = useMatchBreakpoints();
+  const isMobile = isXl === false;
+
   return (
     <Container>
       {target}
-      <DropdownContent position={position}>{children}</DropdownContent>
+      <DropdownContent position={isMobile ? "top" : "bottom"}>{children}</DropdownContent>
     </Container>
   );
 };

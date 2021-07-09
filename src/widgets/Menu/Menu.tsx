@@ -1,14 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import throttle from "lodash/throttle";
+import { useTranslation } from 'react-i18next';
 import Overlay from "../../components/Overlay/Overlay";
 import { Flex } from "../../components/Flex";
+import { Text } from "../../components/Text";
 import { useMatchBreakpoints } from "../../hooks";
 import Logo from "./Logo";
 import UserBlock from "./UserBlock";
 import { NavProps } from "./types";
 import { MENU_HEIGHT } from "./config";
 import Avatar from "./Avatar";
+import MenuButton from "./MenuButton";
+import Dropdown from "../../components/Dropdown/Dropdown";
+import { PancakeRoundIcon, CogIcon, SvgProps } from "../../components/Svg";
+import Button from "../../components/Button/Button";
+import * as IconModule from "./icons";
 
 const Wrapper = styled.div`
   position: relative;
@@ -26,7 +33,6 @@ const StyledNav = styled.div`
   width: 100%;
   top: 0px;
   position: relative;
-  border-bottom: solid 2px rgba(133, 133, 133, 0.1);
   z-index: 2;
 `;
 
@@ -59,12 +65,10 @@ const StyledNavRight = styled.nav`
     width: 100%;
     justify-content: space-between;
     align-items: center;
-    padding-left: 24px;
-    padding-right: 16px;
     height: ${MENU_HEIGHT}px;
     border-top: solid 2px rgba(133, 133, 133, 0.1);
-    background: #2A1436;
     z-index: 20;
+    background-color:  ${({ theme }) => theme.colors.background};
 	}
 `;
 
@@ -92,10 +96,9 @@ const StyledNavLink = styled.div`
   display: flex;
   align-items: center;
   width: fit-content;
-  font-size: 1.2rem;
   font-weight 500;
   color: #C3C5CB;
-  margin: 0px 12px;
+  margin: 0px 16px;
   &:hover {
     text-decoration: underline;
   }
@@ -124,6 +127,17 @@ const StyledLinkContainer = styled.div`
 	}
 `;
 
+const Icons = (IconModule as unknown) as { [key: string]: React.FC<SvgProps> };
+const { MoonIcon, SunIcon, LanguageIcon, MoreIcon } = Icons;
+
+const MobileDropdown = styled(Dropdown)`
+  ${({ theme }) => theme.mediaQueries.sm} {
+    display: block;
+  }
+
+  display: none;
+`;
+
 const Menu: React.FC<NavProps> = ({
   account,
   login,
@@ -140,11 +154,25 @@ const Menu: React.FC<NavProps> = ({
   profile,
   children,
 }) => {
+  const { t } = useTranslation();
   const { isXl } = useMatchBreakpoints();
   const isMobile = isXl === false;
   const [isPushed, setIsPushed] = useState(!isMobile);
   const [showMenu, setShowMenu] = useState(true);
   const refPrevOffset = useRef(window.pageYOffset);
+  const sharelinks = [
+    {
+      name: "Twitter",
+      url: "https://charts.bogged.finance/"
+    },
+    {
+      name: "Github",
+      url: "https://charts.bogged.finance/"
+    },
+  ]
+  const goToLink = (link: string) => {
+    window.open(link, '_blank');
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -189,17 +217,45 @@ const Menu: React.FC<NavProps> = ({
             href={homeLink?.href ?? "/"}
           />
           <StyledLinkContainer>
-            <StyledNavTitle as="a" href={`#/swap`}>
-              $GHOSTFACE
-            </StyledNavTitle>
-            <StyledNavLink as="a" href={`https://charts.bogged.finance/?token=0x0952ddffde60786497c7ced1f49b4a14cf527f76`}>
-              Chart
+            <StyledNavLink as="a" href={`https://charts.bogged.finance/?token=0xc28abfd5283e724f45ef71d59311d433b4b301fa`}>
+              <Text fontSize="20px">{t('menuchart')}</Text>
             </StyledNavLink>
+            <StyledNavLink as="a" href={`https://halwaswap.com/about`}>
+              <Text fontSize="20px">{t('menuabout')}</Text>
+            </StyledNavLink>
+            <MobileDropdown
+              position="top-right"
+              target={
+                <Button size="sm" variant="text" startIcon={<MoreIcon color="textSubtle" width="24px" />} />
+              }
+            >
+              {sharelinks.map((link) => (
+                <MenuButton
+                  key={link.name}
+                  fullWidth
+                  onClick={() => goToLink(link.url)}
+                  // Safari fix
+                  style={{ minHeight: "32px", height: "auto" }}
+                >
+                  {link.name}
+                </MenuButton>
+              ))}
+            </MobileDropdown>
           </StyledLinkContainer>
         </StyledNavLeft>
         <StyledNavRight>
           <Flex>
-            <UserBlock account={account} login={login} logout={logout} toggleTheme={toggleTheme} buy={buy}/>
+            <UserBlock
+              account={account}
+              login={login}
+              logout={logout}
+              buy={buy}
+              toggleTheme={toggleTheme}
+              isDark={isDark}
+              langs={langs}
+              setLang={setLang}
+              currentLang={currentLang}
+            />
             {profile && <Avatar profile={profile} />}
           </Flex>
         </StyledNavRight>

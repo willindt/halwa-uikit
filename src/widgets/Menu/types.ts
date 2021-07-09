@@ -55,4 +55,6 @@ export interface NavProps extends PanelProps {
   profile?: Profile;
   logout: () => void;
   buy: () => void;
+  toggleTheme: (isDark: boolean) => void;
+  isDark: boolean;
 }

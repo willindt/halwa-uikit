@@ -6,6 +6,7 @@ import Flex from "../../components/Flex/Flex";
 import { Modal } from "../Modal";
 import CopyToClipboard from "./CopyToClipboard";
 import { localStorageKey } from "./config";
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   account: string;
@@ -13,8 +14,10 @@ interface Props {
   onDismiss?: () => void;
 }
 
-const AccountModal: React.FC<Props> = ({ account, logout, onDismiss = () => null }) => (
-  <Modal title="Your wallet" onDismiss={onDismiss}>
+const AccountModal: React.FC<Props> = ({ account, logout, onDismiss = () => null }) => {
+  const { t } = useTranslation()
+  return(
+  <Modal title={t('yourwallet')} onDismiss={onDismiss}>
     <Text
       fontSize="20px"
       bold
@@ -24,9 +27,9 @@ const AccountModal: React.FC<Props> = ({ account, logout, onDismiss = () => null
     </Text>
     <Flex mb="32px">
       <LinkExternal small href={`https://bscscan.com/address/${account}`} mr="16px">
-        View on BscScan
+        {t('viewonbscscan')}
       </LinkExternal>
-      <CopyToClipboard toCopy={account}>Copy Address</CopyToClipboard>
+      <CopyToClipboard toCopy={account}>{t('copyaddress')}</CopyToClipboard>
     </Flex>
     <Flex justifyContent="center">
       <Button
@@ -39,10 +42,11 @@ const AccountModal: React.FC<Props> = ({ account, logout, onDismiss = () => null
           window.location.reload();
         }}
       >
-        Logout
+        {t('logout')}
       </Button>
     </Flex>
   </Modal>
-);
+  )
+};
 
 export default AccountModal;

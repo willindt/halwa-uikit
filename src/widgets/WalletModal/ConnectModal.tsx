@@ -6,6 +6,7 @@ import { Modal } from "../Modal";
 import WalletCard from "./WalletCard";
 import config from "./config";
 import { Login } from "./types";
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   login: Login;
@@ -18,9 +19,9 @@ const HelpLink = styled(Link)`
   align-items: center;
   margin-top: 24px;
 `;
-
-const ConnectModal: React.FC<Props> = ({ login, onDismiss = () => null }) => (
-  <Modal title="Connect to a wallet" onDismiss={onDismiss}>
+const ConnectModal: React.FC<Props> = ({ login, onDismiss = () => null }) => {
+  const { t } = useTranslation()
+  return (<Modal title={t('unlockwallet')} onDismiss={onDismiss}>
     {config.map((entry, index) => (
       <WalletCard
         key={entry.title}
@@ -31,6 +32,7 @@ const ConnectModal: React.FC<Props> = ({ login, onDismiss = () => null }) => (
       />
     ))}
   </Modal>
-);
+  )
+};
 
 export default ConnectModal;
